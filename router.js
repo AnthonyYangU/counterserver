@@ -19,15 +19,13 @@ const Controller = require('./controller/index')
 module.exports = (app)=>{
     // app.use(bodyParser());
     router.get('/api',Controller.api);
-    // router.post('/api/login',Controller.login);
+    router.post('/api/register',Controller.register);
+    router.get('/api/userfind',Controller.userfind);
     router.post('/api/login',Controller.login);
-    router.get('/api/test',Controller.test);
-    router.post('/api/search',Controller.search);
-    router.post('/api/delete',Controller.delete);
-    router.post('/api/dm',Controller.dm);
-    router.post('/api/inputdb',Controller.inputdb);
+    router.get('/api/delete',Controller.delete);
     // router.post('/api/upload',upload.single('file'),Controller.upload);
-   
+    router.get('/api/detail',Controller.detail);
+    router.post('/api/dm',Controller.dm);
     app.use(router.routes()).use(router.allowedMethods());
 };
 

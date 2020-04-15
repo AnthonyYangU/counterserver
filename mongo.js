@@ -95,14 +95,6 @@ async function userFind(userInfo){
     })
 }
 
-async function userStatus(username){
-    return await counterUserModel.findOne({userName:username},err=>{
-        if(err){
-            console.log(err)
-        }
-    });
-}
-
 async function userUpdate(userInfo){
     return await counterUserModel.updateOne({userName:userInfo.userName},userInfo,(err)=>{
         if(err){
@@ -128,15 +120,19 @@ async function counterFindAll(){
 }
 
 async function counterFindDetail(deviceId){
-    return await counterModel.findOne({deviceId:deviceId},err=>{
+    return await counterModel.findOne(deviceId,err=>{
         if(err)
             console.log(err)
     }).select('deviceId data')
 }
 //$push 有bug
 // {upsert:true}
+/**
+ * 
+ * @param {Object} counterInfo 
+ */
 async function counterUpdateOrCreate(counterInfo){
-    console.log(counterInfo)
+    // console.log(counterInfo)
     return await counterModel.updateOne({
         deviceId:counterInfo.deviceId
     },{
@@ -154,6 +150,22 @@ async function counterUpdateOrCreate(counterInfo){
             console.log(err)
         }
     })
+}
+
+async function counterDelete(id){
+    return await counterModel.deleteOne(id,err=>{
+        if(err){
+            console.log(err)
+        }else{
+            console.log(`Delete one data, _id is ${id._id}`)
+        }
+    })
+}
+
+async function counterDeleteMany(deviceIdArray){
+    return await counterModel.deleteMany({deviceId:{$in:deviceIdArray}}),err=>{
+            console.log(`Delete ${deviceIdArray.length} successfully`)
+    }
 }
 
 var userTest = {
@@ -194,7 +206,7 @@ function simulateData(){
             counterTest.data.count = 10 + i*2 ;
             counterTest.data.battery = (3.15 + 0.3*i*i).toFixed(3)
             counterTest.data.date = '2020' + '-' + '0' + 4 + day
-            console.log(counterTest.data.battery)
+            // console.log(counterTest.data.battery)
             counterUpdateOrCreate(counterTest).then(data=>{
                 console.log(data)
             })
@@ -236,21 +248,26 @@ function tester(){
     // counterFindDetail(1002).then(data=>{
     //     console.log(data)
     // })
-    userStatus('01234s').then(data=>{
-        console.log(data)
-    })
-    userStatus('0123s').then(data=>{
-        console.log(data)
-    })
+    // userStatus('01234s').then(data=>{
+    //     console.log(data)
+    // })
+    // userStatus('0123s').then(data=>{
+    //     console.log(data)
+    // })
+    // counterDeleteMany([1008,1009]).then(data=>{
+    //     //  console.log(data)
+    // })
 }
 
 tester();
 module.exports = {
     userRegister,
-    userStatus,
+    userFind,
     userUpdate,
     counterFindAll,
     counterFindDetail,
     counterUpdateOrCreate,
-    simulateData
+    simulateData,
+    counterDelete,
+    counterDeleteMany
 }
