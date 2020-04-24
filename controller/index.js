@@ -43,7 +43,7 @@ module.exports = {
     },
     delete: async(ctx,next)=>{
         let id = ctx.request.query;
-        console.log(id)
+        // console.log(id)
         ctx.response.body = {
             status:0,
             data:await counterDelete(id)
