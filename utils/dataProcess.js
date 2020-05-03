@@ -16,15 +16,25 @@ const { counterUpdateOrCreate } = require('../mongo.js')
 //head:5b5a
 
 function dataConvert (data) {
-    let deviceId = dataReverse(data.substring(4, 8));
-    let errorFlag = data.substring(8, 10);
-    let equipeErr = data.substring(10, 12);
-    let year = data.substring(12, 14);
-    let month = data.substring(14, 16);
-    let day = data.substring(16, 18);
-    let counterNumber = dataReverse(data.substring(24, 32));
-    let battery = dataReverse(data.substring(32, 40));
-    let tile = dataReverse(data.substring(40, 44));
+    // let deviceId = dataReverse(data.substring(4, 8));
+    // let errorFlag = data.substring(8, 10);
+    // let equipeErr = data.substring(10, 12);
+    // let year = data.substring(12, 14);
+    // let month = data.substring(14, 16);
+    // let day = data.substring(16, 18);
+    // let counterNumber = dataReverse(data.substring(24, 32));
+    // let battery = dataReverse(data.substring(32, 40));
+    // let tile = dataReverse(data.substring(40, 44));
+
+    let deviceId = data.substring(4, 34);
+    let errorFlag = data.substring(34, 36);
+    let equipeErr = data.substring(36, 38);
+    let year = data.substring(38, 40);
+    let month = data.substring(40, 42);
+    let day = data.substring(42, 44);
+    let counterNumber = dataReverse(data.substring(48, 56));
+    let battery = dataReverse(data.substring(56, 64));
+
 
     // console.log('deviceId', deviceId);
     // console.log("errorFlag", errorFlag);
@@ -36,8 +46,12 @@ function dataConvert (data) {
     // console.log("counterNumber", counterNumber)
     // console.log("barrery", battery)
     // console.log("tile", tile)
+    let deviceNum = [];
+    for (let i = 0; i < deviceId.length; i = i + 2) {
+        deviceNum.push(String.fromCharCode(parseInt(deviceId.substring(i, i + 2), 16)));
+    }
+    deviceId = deviceNum.join('');
 
-    deviceId = parseInt(deviceId.join(''));
     equipErr = parseInt(equipeErr, 16)
     errorFlag = parseInt(errorFlag, 16)
     counterNumber = parseInt(counterNumber.join(''), 16);
@@ -67,7 +81,7 @@ function dataConvert (data) {
     //     }
     // };
 
-    // console.log('deviceId', deviceId);
+    // console.log('deviceId', parseInt(deviceId));
     // console.log("errorFlag", errorFlag);
     // console.log("battery", battery);
     // console.log("equipeErr", equipeErr);
@@ -112,5 +126,5 @@ function dataReverse (data) {
 // dataConvert('5b5a010000000a0b0200000012000000000000006b6a0000')
 // dataReverse('01002356');
 // console.log('5b5a0100000000000000000000000000000000006b6a0000'.length)
-
+// dataConvert("5b5a383636313034303238393134313835000014050100000200000000000000");
 module.exports = dataConvert;

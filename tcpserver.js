@@ -18,7 +18,7 @@ const tcpServer = net.createServer((socket) => {
         let receivedData = data.toString('hex')
         let str = addr + " receive: " + receivedData + '\n';
         console.log(str);
-        if (receivedData.length == 48 && receivedData.substring(0, 4) == '5b5a') {
+        if (receivedData.length == 64 && receivedData.substring(0, 4) == '5b5a') {
             dataConvert(receivedData)
         } else {
             console.log('Data module error');
