@@ -1,6 +1,6 @@
 const net = require('net');
 const TCP_PORT = "9001"
-const TIMEOUT = 6000;//tcp客户端超过6秒没发数据判为超时并断开连接
+const TIMEOUT = 30000;//tcp客户端超过6秒没发数据判为超时并断开连接
 const dataConvert = require('./utils/dataProcess');
 
 // var tcpClient = null;//tcp客户端
