@@ -32,8 +32,11 @@ function dataConvert (data) {
     let year = data.substring(38, 40);
     let month = data.substring(40, 42);
     let day = data.substring(42, 44);
-    let counterNumber = dataReverse(data.substring(48, 56));
-    let battery = dataReverse(data.substring(56, 64));
+    let hour = data.substring(44,46);
+    let minute = data.substring(46,48);
+    let second = data.substring(48,50);
+    let counterNumber = dataReverse(data.substring(56, 64));
+    let battery = dataReverse(data.substring(64, 72));
 
 
     // console.log('deviceId', deviceId);
@@ -67,6 +70,16 @@ function dataConvert (data) {
     day = parseInt(day, 16)
     day = day < 10 ? '0' + day : day;
     let date = '20' + year + '-' + month + '-' + day
+
+    hour = parseInt(hour,16);
+    hour = hour<10?'0'+hour:hour;
+    minute = parseInt(minute,16);
+    minute = minute<10?'0'+minute:minute;
+    second = parseInt(second,16);
+    second = second<10?'0'+second:second;
+    let time = hour + ":" + minute + ":" + second;
+
+    let dateTime = date + " " + time;
 
     let batteryBin = parseInt(battery.join(''), 16).toString(2)
     // console.log(batteryBin)
@@ -103,7 +116,7 @@ function dataConvert (data) {
         data: {
             count: counterNumber,
             battery: battery,
-            date: date,
+            date: dateTime,
             status: status
         }
     }
@@ -126,5 +139,6 @@ function dataReverse (data) {
 // dataConvert('5b5a010000000a0b0200000012000000000000006b6a0000')
 // dataReverse('01002356');
 // console.log('5b5a0100000000000000000000000000000000006b6a0000'.length)
-// dataConvert("5b5a383636313034303238393134313835000014050100000200000000000000");
+
+// dataConvert("5b5a383636313034303238393134313835000014050112162400000200000000000000");
 module.exports = dataConvert;

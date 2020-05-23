@@ -1,6 +1,3 @@
-
-
-
 // function hexTobin(n){
 //     let num = parseInt(n,16)
 //     console.log(num)

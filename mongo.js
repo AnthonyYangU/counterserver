@@ -116,7 +116,7 @@ async function counterFindAll(){
     return await counterModel.find(err=>{
         if(err)
             console.log(err)
-    }).sort('deviceId').select('deviceId lastData')
+    }).sort({_id: 1}).select('deviceId lastData')
 }
 
 async function counterFindDetail(deviceId){
@@ -230,7 +230,7 @@ function tester(){
     //     console.log(data)
     // })
 
-    // deviceTest.deviceId = 2001
+    // counterTest.deviceId = 20001;
     // counterCreate(counterTest).then(data=>{
     //     counterUpdate(counterTest).then(data=>{
     //         console.log(data)
