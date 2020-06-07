@@ -191,7 +191,7 @@ async function counterFindDetail(deviceId){
     return await counterModel.findOne(deviceId,err=>{
         if(err)
             console.log(err)
-    }).select('deviceId data')
+    }).select('deviceId locationInfo data')
 }
 //$push 有bug
 // {upsert:true}
@@ -226,7 +226,7 @@ async function counterDelete(id){
         if(err){
             console.log(err)
         }else{
-            console.log(`Delete one data, _id is ${id._id}`)
+            console.log(`Delete one data`,id)
         }
     })
 }
