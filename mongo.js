@@ -31,6 +31,9 @@ var counterSchema = mongoose.Schema({
         required:true,
         unique:true
     },
+    locationInfo:{
+        type:String
+    },
     lastData:{
         lastCount:{
             type:Number,
@@ -71,6 +74,71 @@ var counterSchema = mongoose.Schema({
 
 const counterModel = mongoose.model('counter',counterSchema);
 
+var equipSchema = mongoose.Schema({
+    deviceId:{
+        type:Number,
+        required:true,
+        unique:true
+    },
+    imeiCode:{
+        type:Number,
+        required:true,
+        unique:true
+    },
+    locationInfo:{
+        type:String,
+        required:true
+    },
+    status:{
+        type:Number,
+        default:0
+    }
+})
+
+const equipModel = mongoose.model('equip',equipSchema);
+async function findEquip(){
+    return await equipModel.find(err=>{
+        if(err){
+            console.error(err);
+        }
+    }).sort({deviceId:1});
+}
+
+async function creatEquip(json){
+    return await equipModel.updateOne({
+        deviceId:json.deviceId
+    },{
+        imeiCode:json.imeiCode,
+        locationInfo:json.locationInfo,
+        status:json.status==null?0:json.status
+    },{upsert:true},(err)=>{
+        if(err){
+            console.error(err)
+        }
+    })
+}
+
+async function updateEquipStatus(deviceId){
+    return await equipModel.updateOne(deviceId,{status:1},(err)=>{
+        if(err){
+            console.error(err);
+        }
+    })
+}
+
+async function deleteEquip(id){
+    return await equipModel.deleteOne(id,err=>{
+        if(err)
+        console.error(err)
+    })
+}
+
+async function findEquipById(id){
+    return await equipModel.findOne(id,err=>{
+        if(err)
+            console.error(err)
+    })
+}
 async function userRegister(userInfo){
     return await counterUserModel.create(userInfo,err=>{
         // console.log(userInfo)
@@ -116,7 +184,7 @@ async function counterFindAll(){
     return await counterModel.find(err=>{
         if(err)
             console.log(err)
-    }).sort({_id: 1}).select('deviceId lastData')
+    }).sort({_id: 1}).select('deviceId locationInfo lastData')
 }
 
 async function counterFindDetail(deviceId){
@@ -136,6 +204,7 @@ async function counterUpdateOrCreate(counterInfo){
     return await counterModel.updateOne({
         deviceId:counterInfo.deviceId
     },{
+        locationInfo:counterInfo.locationInfo,
         lastData:{
             lastCount:counterInfo.data.count,
             lastBattery:counterInfo.data.battery,
@@ -175,6 +244,7 @@ var userTest = {
 
 var counterTest = {
     deviceId:1002,
+    locationInfo:"天津西3#-",
     data:{
         count:10,
         battery:3.3,
@@ -183,15 +253,19 @@ var counterTest = {
     }
 };
 
+var equipTest = {
+    deviceId:1002,
+    imeiCode:866104028914185,
+    locationInfo:"天津西3#-32",
+    status:1
+}
+
 function simulateData(){
     var i = 0;
-    setInterval(() => {
-
-        i++;
-    }, 200);
     
     for(let j=0;j<20;j++){
         counterTest.deviceId = 1000 + j;
+        counterTest.locationInfo = "天津西3#-" + j;
         for(let i=0;i<20;i++){
             if(i==10){
                 counterTest.data.status=1
@@ -214,6 +288,13 @@ function simulateData(){
     }
 }
 function tester(){
+    // updateEquipStatus({deviceId:1002})
+    // findEquipById({deviceId:10}).then(data=>{
+    //     console.log(data==null)
+    //     console.log(data)
+    // })
+    // creatEquip(equipTest);
+
     // userTest.userName = '14255536'
     // userRegister(userTest).then(data=>{
     //     console.log(data)
@@ -269,5 +350,10 @@ module.exports = {
     counterUpdateOrCreate,
     simulateData,
     counterDelete,
-    counterDeleteMany
+    counterDeleteMany,
+    findEquip,
+    creatEquip,
+    findEquipById,
+    deleteEquip,
+    updateEquipStatus
 }

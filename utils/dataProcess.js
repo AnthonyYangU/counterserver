@@ -1,5 +1,5 @@
 const { binToFloat } = require('./numberConvert.js')
-const { counterUpdateOrCreate } = require('../mongo.js')
+const { counterUpdateOrCreate,findEquipById,updateEquipStatus } = require('../mongo.js')
 // var counter = {
 //     u16 deviceId;
 //     u8 errorFlag;
@@ -26,7 +26,9 @@ function dataConvert (data) {
     // let battery = dataReverse(data.substring(32, 40));
     // let tile = dataReverse(data.substring(40, 44));
 
+    //imeiCode
     let deviceId = data.substring(4, 34);
+    
     let errorFlag = data.substring(34, 36);
     let equipeErr = data.substring(36, 38);
     let year = data.substring(38, 40);
@@ -113,6 +115,7 @@ function dataConvert (data) {
 
     let counterData = {
         deviceId: deviceId,
+        locationInfo:'',
         data: {
             count: counterNumber,
             battery: battery,
@@ -121,10 +124,25 @@ function dataConvert (data) {
         }
     }
 
-    // console.log(counterData);
-    counterUpdateOrCreate(counterData).then(() => {
-        console.log("Data receive success, counter data is", counterData)
+    findEquipById({imeiCode:deviceId}).then(data=>{
+        if(data!=null){
+            counterData.locationInfo = data.locationInfo;
+            counterData.deviceId = data.deviceId;
+            if(data.status==0){
+                updateEquipStatus({deviceId:data.deviceId})
+            }
+            counterUpdateOrCreate(counterData).then(() => {
+                console.log("Data receive success, counter data is", counterData)
+            }) 
+        }else{
+            console.error("Equip isn't registered, imeiCode is",deviceId);
+        }
     })
+
+    // console.log(counterData);
+    // counterUpdateOrCreate(counterData).then(() => {
+    //     console.log("Data receive success, counter data is", counterData)
+    // })
 
 }
 function dataReverse (data) {

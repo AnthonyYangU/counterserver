@@ -26,6 +26,10 @@ module.exports = (app)=>{
     // router.post('/api/upload',upload.single('file'),Controller.upload);
     router.get('/api/detail',Controller.detail);
     router.post('/api/dm',Controller.dm);
+    router.post('/api/equipRegister',Controller.equipRegister);
+    router.get('/api/findEquip',Controller.findEquip);
+    router.post('/api/findEquipById',Controller.findEquipById);
+    router.post('/api/deleteEquip',Controller.deleteEquip)
     app.use(router.routes()).use(router.allowedMethods());
 };
 

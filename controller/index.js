@@ -1,4 +1,5 @@
-const {userRegister,userFind,userUpdate,counterUpdateOrCreate,counterFindAll,counterFindDetail,counterDelete,counterDeleteMany} = require('../mongo.js')
+const {userRegister,userFind,userUpdate,counterUpdateOrCreate,counterFindAll,counterFindDetail,
+    counterDelete,counterDeleteMany,findEquip,creatEquip,findEquipById,deleteEquip} = require('../mongo.js')
 
 const JSON_MIME = 'application/json'
 module.exports = {
@@ -55,6 +56,35 @@ module.exports = {
         ctx.response.body = {
             status:0,
             data:await counterDeleteMany(delArray)
+        }
+    },
+    equipRegister:async(ctx,next)=>{
+        let requestData = ctx.request.body;
+        // console.log(requestData);
+        ctx.response.body={
+            status:await creatEquip(requestData.ruleForm)
+        }
+    },
+    findEquip:async(ctx,next)=>{
+        ctx.response.body={
+            status:0,
+            data:await findEquip()
+        }
+    },
+    findEquipById:async(ctx,next)=>{
+        let requestData = ctx.request.body;
+        // console.log(requestData);
+        ctx.response.body={
+            status:0,
+            data:await findEquipById(requestData)
+        }
+    },
+    deleteEquip:async(ctx,next)=>{
+        let id = ctx.request.body;
+        // console.log(id)
+        ctx.response.body={
+            status1:await counterDelete(id),
+            status2:await deleteEquip(id)
         }
     }
 
